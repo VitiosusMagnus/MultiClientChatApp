@@ -75,6 +75,7 @@ Follow these steps to set up and run the multi-client chat application:
    To stop the server, press `Ctrl+C` in the terminal where the server is running.
 
 ## Screenshots
+![screenshot](https://github.com/VitiosusMagnus/MulticlientChatApp/assets/90712554/8089b12e-c800-4285-8d3b-204860956deb)
 
 
 ## License
