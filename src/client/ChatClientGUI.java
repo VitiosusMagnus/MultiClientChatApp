@@ -8,17 +8,16 @@ import java.io.IOException;
 
 public class ChatClientGUI extends JFrame {
 
-    private ChatClient client;
     JButton sendButton;
     JTextField textField;
     JTextArea textArea;
 
-    ChatClientGUI(ChatClient client){
-        this.client = client;
+    ChatClientGUI(){
         setTitle("ChatApp");
         setMinimumSize(new Dimension(800,600));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+
 
         //header
         JPanel headerJPanel = new JPanel();
@@ -67,14 +66,7 @@ public class ChatClientGUI extends JFrame {
         sendButton.setText("Send");
         sendButton.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
         sendButton.setBackground(Color.white);
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String messageToSend = textField.getText();
-                sendMessageToServer(messageToSend);
-                textField.setText("");
-            }
-        });
+
 
 
         //textField
@@ -90,19 +82,10 @@ public class ChatClientGUI extends JFrame {
 
     }
 
-    public void sendMessageToServer(String message){
-        textArea.append("You: " + message + "\n");
-        textArea.setCaretPosition(textArea.getDocument().getLength());//scrolling bottom
 
-        try {
-            client.sendMessageToServer(message);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void displayReceivedMessage(String message){
-        textArea.append("Server: " + message + "\n");
+        textArea.append(message + "\n");
         textArea.setCaretPosition(textArea.getDocument().getLength()); // Scroll to the bottom.
     }
 
@@ -110,12 +93,14 @@ public class ChatClientGUI extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ChatClient client = new ChatClient();
-                ChatClientGUI clientGUI = new ChatClientGUI(client);
+                ChatClientGUI clientGUI = new ChatClientGUI();
+                ChatClient client = new ChatClient(clientGUI);
 
                 clientGUI.setVisible(true);
                 client.start();
             }
         });
     }
+
+
 }

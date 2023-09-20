@@ -10,6 +10,8 @@ import java.util.ArrayList;
 public class ClientHandler implements Runnable{
     private Socket clientSocket;
     private PrintWriter out;
+    private BufferedReader in;
+    private String nickname;
 
     protected static ArrayList<ClientHandler> userList = new ArrayList<>();
 
@@ -20,6 +22,11 @@ public class ClientHandler implements Runnable{
         this.clientSocket = clientSocket;
         try {
             out = new PrintWriter(clientSocket.getOutputStream(),true);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            //setting nickname
+            out.println("Write nickname");
+            nickname = in.readLine();
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -27,9 +34,9 @@ public class ClientHandler implements Runnable{
     @Override
     public void run() {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String message;
-            while ((message = reader.readLine()) != null){
+            while (clientSocket.isConnected()){
+                message = in.readLine();
                 broadcastMessage(message);
             }
         } catch (IOException e) {
@@ -39,7 +46,9 @@ public class ClientHandler implements Runnable{
 
     private void broadcastMessage(String message){
         for (ClientHandler user : userList) {
-            user.out.println(message);
+            if (user != this){
+                user.out.println(nickname + ": " + message);
+            }
         }
     }
 }
