@@ -77,17 +77,6 @@ Follow these steps to set up and run the multi-client chat application:
 ## Screenshots
 
 
-
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to this project, please follow these guidelines:
-
-- Fork the repository.
-- Create a new branch for your feature or bug fix.
-- Make your changes and ensure the code is well-documented.
-- Test your changes thoroughly.
-- Create a pull request with a clear description of your changes.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
