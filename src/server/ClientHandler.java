@@ -34,7 +34,9 @@ public class ClientHandler implements Runnable{
 
     private void broadcastMessage(String message){
         for (Socket socket : ChatServer.clientSockets) {
-            writer.println(message);
+            if (socket != clientSocket){
+                writer.println(message);
+            }
         }
     }
 }
