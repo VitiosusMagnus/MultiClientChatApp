@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ChatServer {
     private static final int SERVER_PORT = 9999;
-    protected static List<Socket> clientSockets = new ArrayList<>();
+
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
@@ -16,10 +16,12 @@ public class ChatServer {
 
             while (true){
                 Socket clientSocket = serverSocket.accept();
-                clientSockets.add(clientSocket);
+                System.out.println("New user connected");
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                ClientHandler.userList.add(clientHandler);
 
                 //create a separate thread to handle each client.
-                Thread clientThread = new Thread(new ClientHandler(clientSocket));
+                Thread clientThread = new Thread(clientHandler);
                 clientThread.start();
             }
 

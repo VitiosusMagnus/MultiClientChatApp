@@ -5,16 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ClientHandler implements Runnable{
     private Socket clientSocket;
-    private PrintWriter writer;
+    private PrintWriter out;
+
+    protected static ArrayList<ClientHandler> userList = new ArrayList<>();
+
+
 
 
     public ClientHandler(Socket clientSocket){
         this.clientSocket = clientSocket;
         try {
-            writer = new PrintWriter(clientSocket.getOutputStream(),true);
+            out = new PrintWriter(clientSocket.getOutputStream(),true);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -33,10 +38,8 @@ public class ClientHandler implements Runnable{
     }
 
     private void broadcastMessage(String message){
-        for (Socket socket : ChatServer.clientSockets) {
-            if (socket != clientSocket){
-                writer.println(message);
-            }
+        for (ClientHandler user : userList) {
+            user.out.println(message);
         }
     }
 }

@@ -7,42 +7,48 @@ import java.net.Socket;
 
 public class ChatClient {
 
-    private ChatClientGUI gui;
+        private Socket clientSocket;
+        private OutputStream out;
+        private BufferedReader in;
 
-    public ChatClient(ChatClientGUI gui){
-        this.gui = gui;
+
+
+    public ChatClient(){
+
     }
 
     public void start() {
         try {
-            Socket clientSocket = new Socket(InetAddress.getLocalHost(), 9999);
-            OutputStream outputStream = clientSocket.getOutputStream();
+            clientSocket = new Socket(InetAddress.getLocalHost(), 9999);
+            out = clientSocket.getOutputStream();
 
             Thread messageReceiverThread = new Thread(()->{
                try {
-                   BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                   in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                    String serverMessage;
-                   while ((serverMessage = reader.readLine()) != null){
-                       gui.displayReceivedMessage(serverMessage);
+                   while ((serverMessage = in.readLine()) != null){
+                        //TODO:
                    }
                }catch (IOException e){
+                   System.out.println("error in messageReceiverThread");
                    e.printStackTrace();
                }
             });
             messageReceiverThread.start();
 
             // Send message to server
-            sendMessageToServer("Hello server!", outputStream);
+            sendMessageToServer("Hello server!");
 
         } catch (IOException e) {
+            System.out.println("error in ChatClient start method");
             throw new RuntimeException(e);
         }
     }
 
-    public static void sendMessageToServer(String message, OutputStream outputStream) throws IOException {
+    public  void sendMessageToServer(String message) throws IOException {
         byte[] messageBytes = message.getBytes();
-        outputStream.write(messageBytes);
-        outputStream.flush();
+        out.write(messageBytes);
+        out.flush();
     }
 }

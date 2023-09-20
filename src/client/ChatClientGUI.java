@@ -4,14 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class ChatClientGUI extends JFrame {
 
+    private ChatClient client;
     JButton sendButton;
     JTextField textField;
     JTextArea textArea;
 
-    ChatClientGUI(){
+    ChatClientGUI(ChatClient client){
+        this.client = client;
         setTitle("ChatApp");
         setMinimumSize(new Dimension(800,600));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,7 +94,11 @@ public class ChatClientGUI extends JFrame {
         textArea.append("You: " + message + "\n");
         textArea.setCaretPosition(textArea.getDocument().getLength());//scrolling bottom
 
-        // TODO: Implement logic to send the message to the server.
+        try {
+            client.sendMessageToServer(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void displayReceivedMessage(String message){
@@ -103,10 +110,11 @@ public class ChatClientGUI extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ChatClientGUI clientGUI = new ChatClientGUI();
-                clientGUI.setVisible(true);
+                ChatClient client = new ChatClient();
+                ChatClientGUI clientGUI = new ChatClientGUI(client);
 
-                ChatClient client = new ChatClient(clientGUI);
+                clientGUI.setVisible(true);
+                client.start();
             }
         });
     }
