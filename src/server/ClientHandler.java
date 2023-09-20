@@ -51,4 +51,9 @@ public class ClientHandler implements Runnable{
             }
         }
     }
+
+
+    public boolean isClosed(){
+        return clientSocket.isConnected() ? false : true;
+    }
 }

@@ -23,6 +23,14 @@ public class ChatServer {
                 //create a separate thread to handle each client.
                 Thread clientThread = new Thread(clientHandler);
                 clientThread.start();
+
+                //removing disconnected user
+                for (ClientHandler user: ClientHandler.userList){
+                    if (user.isClosed()){
+                        ClientHandler.userList.remove(user);
+                    }
+                }
+                System.gc();
             }
 
         } catch (IOException e) {
