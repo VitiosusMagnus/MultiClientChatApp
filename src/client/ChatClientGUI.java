@@ -88,7 +88,7 @@ public class ChatClientGUI extends JFrame {
     }
 
     public void sendMessageToServer(String message){
-        textArea.append("You: " + message + "/n");
+        textArea.append("You: " + message + "\n");
         textArea.setCaretPosition(textArea.getDocument().getLength());//scrolling bottom
 
         // TODO: Implement logic to send the message to the server.
